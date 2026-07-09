@@ -307,6 +307,10 @@ if(CONFIG_MCUBOOT_SERIAL)
     ${BOOT_DIR}/boot_serial/src/zcbor_bulk.c
   )
 
+  zephyr_sources_ifdef(CONFIG_USB_DEVICE_STACK_NEXT
+    ${BOOT_DIR}/zephyr/mcuboot_usbd_next.c
+  )
+
   zephyr_include_directories(
     ${BOOT_DIR}/bootutil/include
     ${BOOT_DIR}/boot_serial/include

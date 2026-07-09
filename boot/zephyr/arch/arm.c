@@ -12,7 +12,14 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/flash.h>
 #include <zephyr/drivers/timer/system_timer.h>
+#if defined(CONFIG_USB_DEVICE_STACK)
 #include <zephyr/usb/usb_device.h>
+#endif
+
+#if defined(CONFIG_USB_DEVICE_STACK_NEXT) && defined(CONFIG_BOOT_SERIAL_CDC_ACM)
+#include "mcuboot_usbd_next.h"
+#endif
+
 #include <zephyr/linker/linker-defs.h>
 #include <soc.h>
 
@@ -91,7 +98,9 @@ void do_boot(const struct boot_rsp *rsp)
 		sys_clock_disable();
 	}
 
-#ifdef CONFIG_USB_DEVICE_STACK
+#if defined(CONFIG_USB_DEVICE_STACK_NEXT) && defined(CONFIG_BOOT_SERIAL_CDC_ACM)
+	mcuboot_usbd_next_stop();
+#elif defined(CONFIG_USB_DEVICE_STACK)
 	/* Disable the USB to prevent it from firing interrupts */
 	usb_disable();
 #endif
